@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>&iexcl;Hola! &middot; by Nelson Constanza</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            color-scheme: light dark;
+            --bg: #ffffff;
+            --text: #202124;
+            --text-2: #3c4043;
+            --muted: #5f6368;
+            --muted-2: #80868b;
+            --border: #dadce0;
+            --border-soft: #f1f3f4;
+            --surface: #ffffff;
+            --surface-hover: #f1f3f4;
+            --blue: #1a73e8;
+            --blue-hover: #1557b0;
+            --blue-soft: #f1f6fd;
+            --footer-bg: #f8f9fa;
+            --error: #d93025;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #202124;
+                --text: #e8eaed;
+                --text-2: #dadce0;
+                --muted: #9aa0a6;
+                --muted-2: #9aa0a6;
+                --border: #5f6368;
+                --border-soft: #3c4043;
+                --surface: #303134;
+                --surface-hover: #3c4043;
+                --blue: #8ab4f8;
+                --blue-hover: #aecbfa;
+                --blue-soft: #303a4d;
+                --footer-bg: #171717;
+                --error: #f28b82;
+            }
+        }
+        html { background: var(--bg); }
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .wrap { width: 100%; max-width: 560px; padding: 0 20px; display: flex; flex-direction: column; align-items: center; }
+
+        /* Wordmark */
+        .wordmark {
+            margin-top: 9vh;
+            font-size: 64px;
+            font-weight: 500;
+            letter-spacing: -2px;
+            user-select: none;
+        }
+        .wordmark .b { color: #4285f4; }
+        .wordmark .r { color: #ea4335; }
+        .wordmark .y { color: #fbbc05; }
+        .wordmark .g { color: #34a853; }
+        .tagline { color: var(--muted); font-size: 14px; margin-top: 6px; }
+        .tagline b { font-weight: 500; color: var(--text-2); }
+
+        /* Search-style input */
+        .searchbar {
+            margin-top: 36px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border); background: var(--surface);
+            border-radius: 28px;
+            padding: 6px 8px 6px 20px;
+            transition: box-shadow .15s;
+        }
+        .searchbar:focus-within { box-shadow: 0 1px 6px rgba(32,33,36,.28); border-color: transparent; }
+        .searchbar input {
+            color: var(--text);
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-family: inherit;
+            background: transparent;
+            padding: 8px 0;
+        }
+        .searchbar button {
+            background: #1a73e8;
+            color: #fff;
+            border: none;
+            border-radius: 22px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        .searchbar button:hover { background: #1557b0; }
+        .searchbar button:disabled { background: #9aa0a6; cursor: default; }
+
+        /* Greeting chips */
+        .chips { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .chip {
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text-2);
+            border-radius: 18px;
+            padding: 7px 16px;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background .1s;
+        }
+        .chip:hover { background: var(--surface-hover); }
+        .chip-nelson { border-color: var(--blue); color: var(--blue); font-weight: 500; }
+        .chip-nelson:hover { background: var(--blue-soft); }
+
+        /* Results */
+        .results { width: 100%; margin-top: 32px; display: none; }
+        .r-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .spanish {
+            font-size: 20px;
+            font-weight: 400;
+            color: var(--text);
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-soft);
+            margin-bottom: 18px;
+        }
+        .phonetic {
+            font-size: 24px;
+            font-weight: 300;
+            line-height: 1.7;
+            letter-spacing: 1px;
+            color: var(--text-2);
+        }
+        .phonetic b { font-weight: 700; color: var(--blue); }
+        .hint { color: var(--muted-2); font-size: 12px; margin-top: 14px; }
+        .hint b { color: var(--blue); }
+        .copy {
+            margin-top: 16px;
+            background: var(--surface);
+            color: var(--blue);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 7px 18px;
+            font-size: 13px;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+        }
+        .copy:hover { background: var(--blue-soft); }
+        .error { color: var(--error); font-size: 14px; margin-top: 20px; display: none; }
+
+        footer {
+            margin-top: auto;
+            width: 100%;
+            border-top: 1px solid var(--border-soft);
+            padding: 16px 24px;
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+            background: var(--footer-bg);
+        }
+        footer b { font-weight: 500; color: var(--muted); }
+
+        @media (max-width: 480px) {
+            .wordmark { font-size: 48px; margin-top: 6vh; }
+            .phonetic { font-size: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="wordmark"><span class="b">&iexcl;</span>H<span class="r">o</span>l<span class="y">a</span><span class="g">!</span></div>
+        <div class="tagline">Say it like a native &middot; created by <b>Nelson Constanza</b></div>
+
+        <div class="searchbar">
+            <input id="input" type="text" placeholder="Type anything in English&hellip;" autocomplete="off">
+            <button id="go" onclick="process()">Translate</button>
+        </div>
+
+        <div class="chips">
+            <button class="chip" onclick="presetSpanish('\u00a1Hola! \u00bfC\u00f3mo est\u00e1s?', 'Hello, how are you?')">Hello, how are you?</button>
+            <button class="chip" onclick="presetSpanish('Buenos d\u00edas', 'Good morning')">Good morning</button>
+            <button class="chip" onclick="presetSpanish('Mucho gusto', 'Nice to meet you')">Nice to meet you</button>
+            <button class="chip" onclick="presetSpanish('Muchas gracias', 'Thank you very much')">Thank you very much</button>
+            <button class="chip" onclick="presetSpanish('Hasta ma\u00f1ana', 'See you tomorrow')">See you tomorrow</button>
+            <button class="chip" onclick="presetSpanish('Que tengas un buen d\u00eda', 'Have a great day')">Have a great day</button>
+            <button class="chip chip-nelson" onclick="presetSpanish('\u00bfQu\u00e9 est\u00e1 pasando ah\u00ed?', 'What is going on there?')">&#11088; &iexcl;Qu&eacute; est&aacute; pasando ah&iacute;? &mdash; Nelson's greeting</button>
+        </div>
+
+        <div class="results" id="results">
+            <div class="r-label">Spanish</div>
+            <div class="spanish" id="spanish"></div>
+            <div class="r-label">Say it like this</div>
+            <div class="phonetic" id="result"></div>
+            <div class="hint">The <b>bold blue</b> syllable is where the emphasis goes. The letter H sounds like the throaty Spanish J.</div>
+            <button class="copy" id="copy" onclick="copyResult()">Copy</button>
+        </div>
+        <div class="error" id="error"></div>
+    </div>
+
+    <footer>&iexcl;Hola! &mdash; a pronunciation helper for friends of Nelson &middot; Made with pride &#127468;&#127481; by <b>Nelson Constanza</b> &middot; 2026</footer>
+
+    <script>
+        // ---------- Phonetics engine ----------
+        const stressMap = {'\u00e1':'a','\u00e9':'e','\u00ed':'i','\u00f3':'o','\u00fa':'u'};
+        const vowelSounds = {a:'AH', e:'EH', i:'EE', o:'OH', u:'OO'};
+        const onsets = ['BR','BL','KR','KL','DR','FR','FL','GR','GL','PR','PL','TR'];
+
+        function tokenize(w) {
+            let tokens = [], i = 0;
+            const isFrontV = ch => 'e\u00e9i\u00ed'.includes(ch);
+            while (i < w.length) {
+                const c = w[i], n = w[i+1] || '', n2 = w[i+2] || '';
+                if (c==='c' && n==='h') { tokens.push({t:'C',s:'CH'}); i+=2; continue; }
+                if (c==='l' && n==='l') { tokens.push({t:'C',s:'Y'}); i+=2; continue; }
+                if (c==='r' && n==='r') { tokens.push({t:'C',s:'RR'}); i+=2; continue; }
+                if (c==='q' && n==='u') { tokens.push({t:'C',s:'K'}); i+=2; continue; }
+                if (c==='g' && n==='\u00fc') { tokens.push({t:'C',s:'GW'}); i+=2; continue; }
+                if (c==='g' && n==='u' && isFrontV(n2)) { tokens.push({t:'C',s:'G'}); i+=2; continue; }
+                if (c==='\u00f1') { tokens.push({t:'C',s:'NY'}); i++; continue; }
+                if (c==='j') { tokens.push({t:'C',s:'H'}); i++; continue; }
+                if (c==='x') { tokens.push({t:'C',s:'KS'}); i++; continue; }
+                if (c==='g' && isFrontV(n)) { tokens.push({t:'C',s:'H'}); i++; continue; }
+                if (c==='c' && isFrontV(n)) { tokens.push({t:'C',s:'S'}); i++; continue; }
+                if (c==='c') { tokens.push({t:'C',s:'K'}); i++; continue; }
+                if (c==='z') { tokens.push({t:'C',s:'S'}); i++; continue; }
+                if (c==='v') { tokens.push({t:'C',s:'B'}); i++; continue; }
+                if (c==='h') { i++; continue; }
+                if (c==='y') {
+                    if (w.length===1 || i===w.length-1) tokens.push({t:'V',s:'EE'});
+                    else tokens.push({t:'C',s:'Y'});
+                    i++; continue;
+                }
+                if (stressMap[c]) { tokens.push({t:'V',s:vowelSounds[stressMap[c]],stressed:true}); i++; continue; }
+                if (c==='i' && 'aeou\u00e1\u00e9\u00f3\u00fa'.includes(n)) { tokens.push({t:'C',s:'Y'}); i++; continue; }
+                if (c==='u' && 'aeio\u00e1\u00e9\u00ed\u00f3'.includes(n)) { tokens.push({t:'C',s:'W'}); i++; continue; }
+                if (vowelSounds[c]) { tokens.push({t:'V',s:vowelSounds[c]}); i++; continue; }
+                if (/[a-z]/.test(c)) { tokens.push({t:'C',s:c.toUpperCase()}); i++; continue; }
+                i++;
+            }
+            return tokens;
+        }
+
+        function syllabify(tokens) {
+            let syls = [], cur = [], hasV = false;
+            for (let k = 0; k < tokens.length; k++) {
+                const tok = tokens[k], next = tokens[k+1], after = tokens[k+2];
+                if (tok.t==='V' && hasV) { syls.push(cur); cur=[]; hasV=false; }
+                if (tok.t==='C' && hasV) {
+                    const startsNew = (next && next.t==='V') ||
+                        (next && next.t==='C' && after && after.t==='V' &&
+                            (onsets.includes(tok.s+next.s) || next.s==='Y' || next.s==='W'));
+                    if (startsNew) { syls.push(cur); cur=[]; hasV=false; }
+                }
+                cur.push(tok);
+                if (tok.t==='V') hasV = true;
+            }
+            if (cur.length) syls.push(cur);
+            return syls;
+        }
+
+        function convertWord(raw) {
+            const m = raw.match(/^([^a-z\u00e1\u00e9\u00ed\u00f3\u00fa\u00fc\u00f1]*)([a-z\u00e1\u00e9\u00ed\u00f3\u00fa\u00fc\u00f1]+)([^a-z\u00e1\u00e9\u00ed\u00f3\u00fa\u00fc\u00f1]*)$/);
+            if (!m) return raw;
+            const [, pre, word, post] = m;
+            const syls = syllabify(tokenize(word));
+            let stressIdx = syls.findIndex(s => s.some(t=>t.stressed));
+            if (stressIdx === -1 && syls.length > 1) {
+                const lastChar = word.slice(-1);
+                stressIdx = (/[aeiouns]/.test(lastChar)) ? syls.length-2 : syls.length-1;
+            }
+            return pre + syls.map((syl,idx) => {
+                const txt = syl.map(t=>t.s).join('');
+                return idx===stressIdx ? '<b>'+txt+'</b>' : txt;
+            }).join('-') + post;
+        }
+
+        function phoneticize(es) {
+            return es.trim().toLowerCase().split(/\s+/).map(convertWord).join('&nbsp; ');
+        }
+
+        // ---------- UI ----------
+        // Preset phrases carry their own Spanish: instant, no internet needed
+        function presetSpanish(es, en) {
+            document.getElementById('input').value = en || '';
+            document.getElementById('spanish').innerText = es;
+            document.getElementById('result').innerHTML = phoneticize(es);
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+        }
+
+        async function translateToSpanish(en) {
+            let lastErr = '';
+            // Primary: Claude API (works inside the Claude app preview)
+            try {
+                const res = await fetch('https://api.anthropic.com/v1/messages', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'anthropic-dangerous-direct-browser-access': 'true' },
+                    body: JSON.stringify({
+                        model: 'claude-sonnet-4-6',
+                        max_tokens: 1000,
+                        messages: [{
+                            role: 'user',
+                            content: 'Translate this English text to natural Latin American Spanish. Respond with ONLY the Spanish translation, no quotes, no explanation:\n\n' + en
+                        }]
+                    })
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const text = data.content.filter(b => b.type === 'text').map(b => b.text).join('').trim();
+                    if (text) return text;
+                }
+                lastErr = 'Claude: HTTP ' + res.status;
+            } catch (e) { lastErr = 'Claude: ' + e.message; }
+            // Fallback: Google endpoint (works when the file is opened in a normal browser)
+            try {
+                const res2 = await fetch('https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=es&dt=t&q=' + encodeURIComponent(en));
+                if (!res2.ok) throw new Error('HTTP ' + res2.status);
+                const data2 = await res2.json();
+                return data2[0].map(seg => seg[0]).join('');
+            } catch (e2) {
+                throw new Error(lastErr + ' / Google: ' + e2.message);
+            }
+        }
+
+        async function process() {
+            const en = document.getElementById('input').value.trim();
+            const errEl = document.getElementById('error');
+            const btn = document.getElementById('go');
+            errEl.style.display = 'none';
+            if (!en) return;
+            btn.disabled = true; btn.textContent = '\u2026';
+            try {
+                const es = await translateToSpanish(en);
+                document.getElementById('spanish').innerText = es;
+                document.getElementById('result').innerHTML = phoneticize(es);
+                document.getElementById('results').style.display = 'block';
+            } catch (err) {
+                errEl.innerText = 'Typed translation needs internet \u2014 the preset buttons above always work. (' + err.message + ')';
+                errEl.style.display = 'block';
+            } finally {
+                btn.disabled = false; btn.textContent = 'Translate';
+            }
+        }
+
+        function copyResult() {
+            const es = document.getElementById('spanish').innerText;
+            const text = document.getElementById('result').innerText;
+            navigator.clipboard.writeText(es + '\n' + text);
+            const b = document.getElementById('copy');
+            b.textContent = 'Copied!';
+            setTimeout(() => b.textContent = 'Copy', 1500);
+        }
+
+        document.getElementById('input').addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); process(); }
+        });
+    </script>
+</body>
+</html>
