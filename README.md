@@ -1,3 +1,5 @@
 # Hola
-”¡Hola! — a Spanish pronunciation helper for my American friends. Made with pride 🇬🇹 by Nelson Constanza.”
+
+¡Hola! — a Spanish pronunciation helper for English speakers. Made with pride 🇬🇹
+
 Live at: https://tikalzteca-dominator.github.io/Hola/
