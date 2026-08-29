@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>&iexcl;Hola! &middot; Spanish pronunciation helper</title>
+    <title>&iexcl;Hola! &middot; by Nelson Constanza</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; }
@@ -120,8 +120,8 @@
             transition: background .1s;
         }
         .chip:hover { background: var(--surface-hover); }
-        .chip-star { border-color: var(--blue); color: var(--blue); font-weight: 500; }
-        .chip-star:hover { background: var(--blue-soft); }
+        .chip-nelson { border-color: var(--blue); color: var(--blue); font-weight: 500; }
+        .chip-nelson:hover { background: var(--blue-soft); }
 
         /* Results */
         .results { width: 100%; margin-top: 32px; display: none; }
@@ -180,7 +180,7 @@
 <body>
     <div class="wrap">
         <div class="wordmark"><span class="b">&iexcl;</span>H<span class="r">o</span>l<span class="y">a</span><span class="g">!</span></div>
-        <div class="tagline">Say it like a native</div>
+        <div class="tagline">Say it like a native &middot; created by <b>Nelson Constanza</b></div>
 
         <div class="searchbar">
             <input id="input" type="text" placeholder="Type anything in English&hellip;" autocomplete="off">
@@ -194,7 +194,7 @@
             <button class="chip" onclick="presetSpanish('Muchas gracias', 'Thank you very much')">Thank you very much</button>
             <button class="chip" onclick="presetSpanish('Hasta ma\u00f1ana', 'See you tomorrow')">See you tomorrow</button>
             <button class="chip" onclick="presetSpanish('Que tengas un buen d\u00eda', 'Have a great day')">Have a great day</button>
-            <button class="chip chip-star" onclick="presetSpanish('\u00bfQu\u00e9 est\u00e1 pasando ah\u00ed?', 'What is going on there?')">&#11088; &iexcl;Qu&eacute; est&aacute; pasando ah&iacute;? &mdash; a friendly greeting</button>
+            <button class="chip chip-nelson" onclick="presetSpanish('\u00bfQu\u00e9 est\u00e1 pasando ah\u00ed?', 'What is going on there?')">&#11088; &iexcl;Qu&eacute; est&aacute; pasando ah&iacute;? &mdash; Nelson's greeting</button>
         </div>
 
         <div class="results" id="results">
@@ -208,7 +208,7 @@
         <div class="error" id="error"></div>
     </div>
 
-    <footer>&iexcl;Hola! &mdash; a Spanish pronunciation helper &middot; Made with pride &#127468;&#127481; &middot; 2026</footer>
+    <footer>&iexcl;Hola! &mdash; a pronunciation helper for friends of Nelson &middot; Made with pride &#127468;&#127481; by <b>Nelson Constanza</b> &middot; 2026</footer>
 
     <script>
         // ---------- Phonetics engine ----------
