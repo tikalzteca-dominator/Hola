@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Cocina</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            color-scheme: light dark;
+            --bg: #ffffff;
+            --text: #202124;
+            --muted: #5f6368;
+            --border: #dadce0;
+            --border-soft: #f1f3f4;
+            --surface: #ffffff;
+            --surface-hover: #f1f3f4;
+            --blue: #1a73e8;
+            --footer-bg: #f8f9fa;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #202124;
+                --text: #e8eaed;
+                --muted: #9aa0a6;
+                --border: #5f6368;
+                --border-soft: #3c4043;
+                --surface: #303134;
+                --surface-hover: #3c4043;
+                --blue: #8ab4f8;
+                --footer-bg: #171717;
+            }
+        }
+        html { background: var(--bg); }
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .wrap { width: 100%; max-width: 560px; padding: 0 20px; display: flex; flex-direction: column; align-items: center; }
+        .back { align-self: flex-start; margin-top: 20px; color: var(--blue); text-decoration: none; font-size: 14px; }
+        .back:hover { text-decoration: underline; }
+        .wordmark { margin-top: 8vh; font-size: 48px; font-weight: 500; }
+        .tagline { color: var(--muted); font-size: 14px; margin-top: 6px; text-align: center; }
+        .cards { margin-top: 40px; width: 100%; display: flex; flex-direction: column; gap: 12px; }
+        .card {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            border-radius: 14px;
+            padding: 18px 20px;
+            text-decoration: none;
+            color: var(--text);
+        }
+        .card:hover { background: var(--surface-hover); }
+        .card .icon { font-size: 28px; }
+        .card .label { font-size: 17px; font-weight: 500; }
+        .card .desc { font-size: 13px; color: var(--muted); margin-top: 2px; }
+        footer {
+            margin-top: auto;
+            width: 100%;
+            border-top: 1px solid var(--border-soft);
+            padding: 16px 24px;
+            color: var(--muted);
+            font-size: 13px;
+            text-align: center;
+            background: var(--footer-bg);
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <a class="back" href="../">&larr; &iexcl;Hola!</a>
+        <div class="wordmark">La Cocina &#127859;</div>
+        <div class="tagline">Herramientas para Mar&iacute;a &middot; para cocinar y hacer las compras m&aacute;s f&aacute;cil</div>
+
+        <div class="cards">
+            <a class="card" href="tienda-walmart.html">
+                <div class="icon">&#128722;</div>
+                <div>
+                    <div class="label">&iquest;D&oacute;nde lo encuentro?</div>
+                    <div class="desc">Mapa del Walmart de Dover, DE &mdash; busque un ingrediente y sepa en qu&eacute; secci&oacute;n est&aacute;</div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>La Cocina &middot; parte de &iexcl;Hola! &middot; hecho para Mar&iacute;a &middot; 2026</footer>
+</body>
+</html>

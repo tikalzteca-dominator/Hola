@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>&iquest;D&oacute;nde lo encuentro? &middot; Walmart Dover</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        :root {
+            color-scheme: light dark;
+            --bg: #ffffff;
+            --text: #202124;
+            --text-2: #3c4043;
+            --muted: #5f6368;
+            --muted-2: #80868b;
+            --border: #dadce0;
+            --border-soft: #f1f3f4;
+            --surface: #ffffff;
+            --surface-hover: #f1f3f4;
+            --blue: #1a73e8;
+            --blue-hover: #1557b0;
+            --blue-soft: #f1f6fd;
+            --green: #34a853;
+            --green-soft: #e6f4ea;
+            --footer-bg: #f8f9fa;
+            --error: #d93025;
+        }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg: #202124; --text: #e8eaed; --text-2: #dadce0; --muted: #9aa0a6; --muted-2: #9aa0a6;
+                --border: #5f6368; --border-soft: #3c4043; --surface: #303134; --surface-hover: #3c4043;
+                --blue: #8ab4f8; --blue-hover: #aecbfa; --blue-soft: #303a4d; --green: #81c995;
+                --green-soft: #2a3c2e; --footer-bg: #171717; --error: #f28b82;
+            }
+        }
+        html { background: var(--bg); }
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0; min-height: 100vh; background: var(--bg); color: var(--text);
+            display: flex; flex-direction: column; align-items: center;
+        }
+        body.grande { font-size: 118%; }
+        .wrap { width: 100%; max-width: 640px; padding: 0 20px 40px; display: flex; flex-direction: column; align-items: center; }
+
+        .top-row { width: 100%; display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px; }
+        .back { color: var(--blue); text-decoration: none; font-size: 14px; padding-top: 6px; }
+        .back:hover { text-decoration: underline; }
+        .text-toggle {
+            border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
+            border-radius: 16px; padding: 6px 12px; font-size: 13px; font-weight: 500; font-family: inherit; cursor: pointer;
+        }
+        .text-toggle:hover { background: var(--surface-hover); }
+        .text-toggle[aria-pressed="true"] { background: var(--blue-soft); border-color: var(--blue); color: var(--blue); }
+
+        .title { margin-top: 14px; font-size: 34px; font-weight: 500; text-align: center; }
+        body.grande .title { font-size: 38px; }
+        .title .green { color: var(--green); }
+        .store-card {
+            margin-top: 14px; width: 100%; border: 1px solid var(--border); border-radius: 14px;
+            padding: 14px 18px; background: var(--surface); text-align: center;
+        }
+        .store-card .name { font-size: 16px; font-weight: 500; }
+        .store-card .addr { color: var(--muted); font-size: 14px; margin-top: 4px; }
+        .store-card a { color: var(--blue); text-decoration: none; font-weight: 500; }
+        .store-card a:hover { text-decoration: underline; }
+
+        .searchbar {
+            margin-top: 28px; width: 100%; display: flex; align-items: center;
+            border: 1px solid var(--border); background: var(--surface); border-radius: 28px;
+            padding: 8px 8px 8px 22px;
+        }
+        .searchbar:focus-within { box-shadow: 0 1px 6px rgba(32,33,36,.28); border-color: transparent; }
+        .searchbar input {
+            color: var(--text); flex: 1; border: none; outline: none; font-size: 18px;
+            font-family: inherit; background: transparent; padding: 10px 0;
+        }
+        .searchbar button {
+            background: var(--blue); color: #fff; border: none; border-radius: 22px; padding: 12px 22px;
+            font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; white-space: nowrap;
+        }
+        .searchbar button:hover { background: var(--blue-hover); }
+
+        .voice-photo { margin-top: 10px; width: 100%; display: flex; gap: 10px; }
+        .vp-btn {
+            flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px;
+            border: 1.5px solid var(--blue); background: var(--blue-soft); color: var(--blue);
+            border-radius: 24px; padding: 12px 10px; font-size: 14px; font-weight: 500;
+            font-family: inherit; cursor: pointer;
+        }
+        .vp-btn .ic { font-size: 17px; }
+        .vp-btn:hover { background: var(--surface-hover); }
+        .vp-btn[hidden] { display: none; }
+        .vp-btn:disabled { opacity: .55; cursor: default; }
+        .vp-btn.listening { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+
+        .chips { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+        .chip {
+            border: 1px solid var(--border); background: var(--surface); color: var(--text-2);
+            border-radius: 18px; padding: 8px 16px; font-size: 14px; font-family: inherit; cursor: pointer;
+        }
+        .chip:hover { background: var(--surface-hover); }
+        .chip:focus-visible, .searchbar button:focus-visible, .vp-btn:focus-visible, .text-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+        .result {
+            width: 100%; margin-top: 22px; display: none; border-radius: 14px; padding: 18px 20px;
+            background: var(--green-soft); border: 1px solid var(--green);
+        }
+        .result.notfound { background: var(--blue-soft); border-color: var(--blue); }
+        .result .r-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .result .seen { font-size: 13px; color: var(--muted); margin-top: 8px; }
+        .result .zone { font-size: 24px; font-weight: 500; margin-top: 4px; }
+        .result .hint { font-size: 15px; color: var(--text-2); margin-top: 6px; line-height: 1.5; }
+        .add-list-btn {
+            margin-top: 14px; border: none; background: var(--green); color: #fff; border-radius: 18px;
+            padding: 9px 18px; font-size: 14px; font-weight: 500; font-family: inherit; cursor: pointer;
+        }
+        .add-list-btn:hover { opacity: .9; }
+        .add-list-btn:disabled { opacity: .6; cursor: default; }
+
+        .list-title { margin-top: 36px; width: 100%; display: flex; align-items: center; justify-content: space-between; }
+        .list-title .h { font-size: 15px; font-weight: 500; color: var(--muted); }
+        .list-clear { border: none; background: none; color: var(--blue); font-size: 13px; font-family: inherit; cursor: pointer; padding: 4px; }
+        .list-clear[hidden] { display: none; }
+        .mi-lista { margin-top: 10px; width: 100%; display: flex; flex-direction: column; gap: 8px; }
+        .lista-vacia { margin-top: 10px; font-size: 14px; color: var(--muted-2); }
+        .lista-item {
+            display: flex; align-items: center; gap: 12px; border: 1px solid var(--border); background: var(--surface);
+            border-radius: 12px; padding: 10px 14px;
+        }
+        .lista-item input[type="checkbox"] { width: 20px; height: 20px; flex-shrink: 0; accent-color: var(--green); }
+        .lista-item .txt { flex: 1; font-size: 15px; }
+        .lista-item .txt .zona { display: block; font-size: 12px; color: var(--muted); }
+        .lista-item.done .txt { color: var(--muted-2); text-decoration: line-through; }
+        .lista-item .quitar { border: none; background: none; color: var(--muted); font-size: 18px; cursor: pointer; padding: 4px 6px; line-height: 1; }
+        .lista-item .quitar:hover { color: var(--error); }
+
+        .map-title { margin-top: 36px; font-size: 15px; font-weight: 500; color: var(--muted); align-self: flex-start; }
+        .map { margin-top: 12px; width: 100%; display: grid; grid-template-columns: 1fr 1.15fr 1fr; grid-template-rows: repeat(4, auto); gap: 8px; }
+        .zone-box {
+            border: 1.5px solid var(--border); background: var(--surface); border-radius: 12px; padding: 14px 10px;
+            text-align: center; font-size: 13px; line-height: 1.4; transition: background .2s, border-color .2s, transform .15s;
+        }
+        .zone-box b { display: block; font-size: 14px; margin-bottom: 2px; }
+        .zone-box.entrance { grid-column: 2; background: var(--blue-soft); border-color: var(--blue); color: var(--blue); font-weight: 500; }
+        .zone-box.star b::before { content: "\2b50 "; }
+        .zone-box.highlight { background: var(--green-soft); border-color: var(--green); transform: scale(1.04); }
+        .zone-box.highlight b { color: var(--green); }
+
+        .note { margin-top: 24px; font-size: 13px; color: var(--muted-2); text-align: center; line-height: 1.6; }
+
+        footer {
+            margin-top: auto; width: 100%; border-top: 1px solid var(--border-soft); padding: 16px 24px;
+            color: var(--muted); font-size: 13px; text-align: center; background: var(--footer-bg);
+        }
+
+        @media (prefers-reduced-motion: reduce) { .zone-box { transition: none; } }
+        @media (max-width: 480px) {
+            .title { font-size: 26px; }
+            .map { grid-template-columns: 1fr 1fr; }
+            .zone-box.entrance { grid-column: span 2; }
+            .voice-photo { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="top-row">
+            <a class="back" href="./">&larr; La Cocina</a>
+            <button class="text-toggle" id="textToggle" aria-pressed="false" onclick="alternarLetraGrande()">Aa Letra grande</button>
+        </div>
+        <div class="title">&iquest;D&oacute;nde lo <span class="green">encuentro</span>?</div>
+
+        <div class="store-card">
+            <div class="name">Walmart Supercenter &middot; Tienda #1736</div>
+            <div class="addr">36 Jerome Dr, Dover, DE 19901</div>
+            <div class="addr"><a href="tel:+13026742159">(302) 674-2159</a></div>
+        </div>
+
+        <div class="searchbar">
+            <input id="input" type="text" placeholder="Escriba lo que busca&hellip; (ej. cilantro)" autocomplete="off">
+            <button id="go" onclick="buscar()">Buscar</button>
+        </div>
+
+        <div class="voice-photo">
+            <button class="vp-btn" id="micBtn" hidden><span class="ic">&#127908;</span> Buscar hablando</button>
+            <button class="vp-btn" id="camBtn" hidden onclick="document.getElementById('camInput').click()"><span class="ic">&#128248;</span> Tomar foto</button>
+            <input type="file" id="camInput" accept="image/*" capture="environment" hidden>
+        </div>
+
+        <div class="chips">
+            <button class="chip" onclick="buscarChip('crema')">Crema</button>
+            <button class="chip" onclick="buscarChip('masa harina')">Masa harina</button>
+            <button class="chip" onclick="buscarChip('tortillas')">Tortillas</button>
+            <button class="chip" onclick="buscarChip('cilantro')">Cilantro</button>
+            <button class="chip" onclick="buscarChip('pollo')">Pollo</button>
+            <button class="chip" onclick="buscarChip('frijoles')">Frijoles</button>
+            <button class="chip" onclick="buscarChip('comino')">Comino</button>
+        </div>
+
+        <div class="result" id="result">
+            <div class="r-label">Lo encontrar&aacute; en</div>
+            <div class="seen" id="seen" style="display:none;"></div>
+            <div class="zone" id="zone"></div>
+            <div class="hint" id="hint"></div>
+            <button class="add-list-btn" id="addBtn" onclick="agregarActualALista()">+ Agregar a mi lista</button>
+        </div>
+
+        <div class="list-title">
+            <div class="h">&#128722; Mi Lista</div>
+            <button class="list-clear" id="listClear" hidden onclick="vaciarLista()">Vaciar lista</button>
+        </div>
+        <div class="lista-vacia" id="listaVacia">Su lista est&aacute; vac&iacute;a. Busque un producto y toque &ldquo;Agregar a mi lista&rdquo;.</div>
+        <div class="mi-lista" id="miLista"></div>
+
+        <div class="map-title">Mapa general de la tienda</div>
+        <div class="map" id="map">
+            <div class="zone-box" data-zone="produce"><b>Frutas y Verduras</b>cerca de la entrada</div>
+            <div class="zone-box entrance"><b>Entrada / Cajas</b></div>
+            <div class="zone-box" data-zone="salud"><b>Farmacia y Salud</b>lado derecho al entrar</div>
+
+            <div class="zone-box" data-zone="panaderia"><b>Panader&iacute;a</b>junto a Frutas y Verduras</div>
+            <div class="zone-box" data-zone="abarrotes"><b>Pasillos de Abarrotes</b>arroz, aceite, especias, enlatados</div>
+            <div class="zone-box" data-zone="snacks"><b>Bebidas y Snacks</b>pasillos centrales</div>
+
+            <div class="zone-box star" data-zone="internacional"><b>Pasillo Internacional / Hispano</b>masa, achiote, chiles secos, salsas</div>
+            <div class="zone-box" data-zone="abarrotes2"><b>M&aacute;s Abarrotes</b>pasta, sopas, harina</div>
+            <div class="zone-box" data-zone="hogar"><b>Hogar y Cocina</b>ollas, sart&eacute;nes, utensilios</div>
+
+            <div class="zone-box" data-zone="carne"><b>Carnicer&iacute;a y Pescado</b>pared del fondo</div>
+            <div class="zone-box" data-zone="lacteos"><b>L&aacute;cteos y Huevos</b>pared del fondo</div>
+            <div class="zone-box" data-zone="congelados"><b>Congelados</b>pared del fondo</div>
+        </div>
+
+        <div class="note">
+            Este es el orden t&iacute;pico de una tienda Walmart Supercenter. Los n&uacute;meros de pasillo exactos pueden cambiar &mdash; si no encuentra algo, cualquier empleado con gusto la ayuda.
+        </div>
+    </div>
+
+    <footer>Parte de <b>La Cocina</b> &middot; hecho para Mar&iacute;a &middot; 2026</footer>
+
+    <script>
+        const zones = {
+            produce:       { name: 'Frutas y Verduras',        tip: 'Es la primera secci&oacute;n, justo al entrar a la tienda.' },
+            panaderia:     { name: 'Panader&iacute;a',          tip: 'A un lado de Frutas y Verduras, cerca de la entrada.' },
+            carne:         { name: 'Carnicer&iacute;a y Pescado', tip: 'En la pared del fondo de la tienda.' },
+            lacteos:       { name: 'L&aacute;cteos y Huevos',   tip: 'En la pared del fondo, junto a los congelados.' },
+            congelados:    { name: 'Congelados',                tip: 'Pared del fondo, en las secciones con puertas de vidrio.' },
+            abarrotes:     { name: 'Pasillos de Abarrotes',     tip: 'Pasillos centrales: arroz, aceite, especias y enlatados.' },
+            abarrotes2:    { name: 'Pasillos de Abarrotes',     tip: 'Pasillos centrales: pasta, sopas y harina.' },
+            internacional: { name: 'Pasillo Internacional / Hispano &#11088;', tip: 'Busque el letrero “International” o “Hispanic Foods” en los pasillos centrales.' },
+            snacks:        { name: 'Bebidas y Snacks',          tip: 'Pasillos centrales, cerca de las cajas.' },
+            salud:         { name: 'Farmacia y Salud',          tip: 'Al entrar, del lado derecho.' },
+            hogar:         { name: 'Hogar y Cocina',            tip: 'Cerca del centro de la tienda, ollas y utensilios.' }
+        };
+
+        const items = {
+            'cebolla': 'produce', 'onion': 'produce', 'tomate': 'produce', 'jitomate': 'produce', 'tomato': 'produce',
+            'ajo': 'produce', 'garlic': 'produce', 'cilantro': 'produce', 'chile jalapeño': 'produce', 'jalapeño': 'produce',
+            'chile serrano': 'produce', 'aguacate': 'produce', 'avocado': 'produce', 'limon': 'produce', 'limón': 'produce', 'lime': 'produce',
+            'platano': 'produce', 'plátano': 'produce', 'banana': 'produce', 'papa': 'produce', 'potato': 'produce', 'yuca': 'produce',
+            'elote': 'produce', 'maiz': 'produce', 'maíz': 'produce', 'corn': 'produce', 'zanahoria': 'produce', 'carrot': 'produce',
+            'repollo': 'produce', 'cabbage': 'produce', 'lechuga': 'produce', 'lettuce': 'produce', 'pepino': 'produce', 'cucumber': 'produce',
+            'calabacin': 'produce', 'calabacín': 'produce', 'pimiento': 'produce', 'chile': 'produce', 'tomatillo': 'produce',
+            'pina': 'produce', 'piña': 'produce', 'pineapple': 'produce', 'papaya': 'produce', 'mango': 'produce', 'naranja': 'produce', 'orange': 'produce',
+
+            'pan': 'panaderia', 'bread': 'panaderia', 'pan dulce': 'panaderia', 'pastel': 'panaderia', 'cake': 'panaderia', 'baguette': 'panaderia',
+            'donas': 'panaderia', 'tortillas de harina': 'panaderia',
+
+            'pollo': 'carne', 'chicken': 'carne', 'carne de res': 'carne', 'carne molida': 'carne', 'beef': 'carne', 'ground beef': 'carne',
+            'cerdo': 'carne', 'pork': 'carne', 'chuleta': 'carne', 'camaron': 'carne', 'camarón': 'carne', 'shrimp': 'carne',
+            'pescado': 'carne', 'fish': 'carne', 'chorizo': 'carne', 'tocino': 'carne', 'bacon': 'carne', 'jamon': 'carne', 'jamón': 'carne', 'ham': 'carne',
+
+            'leche': 'lacteos', 'milk': 'lacteos', 'huevos': 'lacteos', 'eggs': 'lacteos', 'queso fresco': 'lacteos', 'queso': 'lacteos', 'cheese': 'lacteos',
+            'crema': 'lacteos', 'crema mexicana': 'lacteos', 'sour cream': 'lacteos', 'mantequilla': 'lacteos', 'butter': 'lacteos',
+            'yogur': 'lacteos', 'yogurt': 'lacteos', 'queso rallado': 'lacteos',
+
+            'verduras congeladas': 'congelados', 'frozen vegetables': 'congelados', 'helado': 'congelados', 'ice cream': 'congelados',
+            'papas fritas congeladas': 'congelados', 'pupusas': 'congelados', 'tamales congelados': 'congelados', 'pizza congelada': 'congelados',
+
+            'masa harina': 'internacional', 'masa para tamales': 'internacional', 'harina para tamales': 'internacional', 'achiote': 'internacional',
+            'comino': 'internacional', 'cumin': 'internacional', 'adobo': 'internacional', 'sazon': 'internacional', 'sazón': 'internacional',
+            'chile guajillo': 'internacional', 'chile ancho': 'internacional', 'chiles secos': 'internacional', 'mole': 'internacional',
+            'tortillas de maiz': 'internacional', 'tortillas de maíz': 'internacional', 'tortillas': 'internacional', 'salsa': 'internacional',
+            'caldo de pollo': 'internacional', 'consome': 'internacional', 'consomé': 'internacional', 'maggi': 'internacional', 'knorr': 'internacional',
+
+            'arroz': 'abarrotes', 'rice': 'abarrotes', 'frijoles': 'abarrotes', 'beans': 'abarrotes', 'aceite': 'abarrotes', 'oil': 'abarrotes',
+            'azucar': 'abarrotes', 'azúcar': 'abarrotes', 'sugar': 'abarrotes', 'sal': 'abarrotes', 'salt': 'abarrotes',
+            'especias': 'abarrotes', 'spices': 'abarrotes', 'cafe': 'abarrotes', 'café': 'abarrotes', 'coffee': 'abarrotes',
+            'vinagre': 'abarrotes', 'vinegar': 'abarrotes', 'sopa enlatada': 'abarrotes', 'salsa de tomate': 'abarrotes',
+
+            'harina': 'abarrotes2', 'flour': 'abarrotes2', 'pasta': 'abarrotes2', 'spaghetti': 'abarrotes2', 'sopa': 'abarrotes2',
+            'avena': 'abarrotes2', 'cereal': 'abarrotes2', 'polvo de hornear': 'abarrotes2', 'levadura': 'abarrotes2',
+
+            'refrescos': 'snacks', 'soda': 'snacks', 'jugo': 'snacks', 'juice': 'snacks', 'agua embotellada': 'snacks', 'water': 'snacks',
+            'horchata': 'snacks', 'totopos': 'snacks', 'tortilla chips': 'snacks', 'galletas': 'snacks', 'cookies': 'snacks', 'papitas': 'snacks',
+
+            'jabon': 'salud', 'jabón': 'salud', 'soap': 'salud', 'shampoo': 'salud', 'pasta de dientes': 'salud', 'medicina': 'salud', 'medicine': 'salud',
+            'vitaminas': 'salud',
+
+            'olla': 'hogar', 'sarten': 'hogar', 'sartén': 'hogar', 'comal': 'hogar', 'utensilios': 'hogar', 'servilletas': 'hogar', 'papel aluminio': 'hogar'
+        };
+
+        let ultimoTermino = '';
+
+        function norm(s) {
+            return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
+        }
+
+        function limpiarResaltado() {
+            document.querySelectorAll('.zone-box.highlight').forEach(el => el.classList.remove('highlight'));
+        }
+
+        function mostrarResultado(zoneKey, terminoOriginal, detectadoPorFoto) {
+            const resultBox = document.getElementById('result');
+            const zoneEl = document.getElementById('zone');
+            const hintEl = document.getElementById('hint');
+            const seenEl = document.getElementById('seen');
+            const addBtn = document.getElementById('addBtn');
+            limpiarResaltado();
+
+            if (detectadoPorFoto) {
+                seenEl.style.display = 'block';
+                seenEl.innerHTML = 'Detect&eacute; en la foto: <b>' + terminoOriginal + '</b>';
+            } else {
+                seenEl.style.display = 'none';
+            }
+
+            if (zoneKey && zones[zoneKey]) {
+                resultBox.classList.remove('notfound');
+                zoneEl.innerHTML = zones[zoneKey].name;
+                hintEl.innerHTML = zones[zoneKey].tip;
+                ultimoTermino = terminoOriginal;
+                addBtn.disabled = false;
+                addBtn.textContent = '+ Agregar a mi lista';
+                const box = document.querySelector('.zone-box[data-zone="' + zoneKey + '"]');
+                if (box) { box.classList.add('highlight'); box.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+            } else {
+                resultBox.classList.add('notfound');
+                zoneEl.textContent = 'No lo encontré en la lista';
+                hintEl.innerHTML = 'Seguramente está en <b>Abarrotes</b> o en el <b>Pasillo Internacional</b>. También puede llamar a la tienda: <a href="tel:+13026742159">(302) 674-2159</a>.';
+                ultimoTermino = terminoOriginal;
+                addBtn.disabled = false;
+                addBtn.textContent = '+ Agregar a mi lista de todos modos';
+            }
+            resultBox.style.display = 'block';
+        }
+
+        function buscarTexto(texto, terminoMostrado, detectadoPorFoto) {
+            const q = norm(texto);
+            if (!q) return;
+            const mostrar = terminoMostrado || texto;
+            if (items[q]) { mostrarResultado(items[q], mostrar, detectadoPorFoto); return; }
+            let found = null;
+            for (const key in items) {
+                const k = norm(key);
+                if (q.includes(k) || k.includes(q)) { found = items[key]; break; }
+            }
+            mostrarResultado(found, mostrar, detectadoPorFoto);
+        }
+
+        function buscar() {
+            buscarTexto(document.getElementById('input').value);
+        }
+
+        function buscarChip(texto) {
+            document.getElementById('input').value = texto;
+            buscarTexto(texto);
+        }
+
+        document.getElementById('input').addEventListener('keydown', e => {
+            if (e.key === 'Enter') { e.preventDefault(); buscar(); }
+        });
+
+        // ---------- Buscar hablando ----------
+        (function initVoz() {
+            const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const micBtn = document.getElementById('micBtn');
+            if (!SpeechRec) return;
+            micBtn.hidden = false;
+            micBtn.onclick = () => {
+                const rec = new SpeechRec();
+                rec.lang = 'es-US';
+                rec.interimResults = false;
+                rec.maxAlternatives = 1;
+                micBtn.classList.add('listening');
+                micBtn.innerHTML = '<span class="ic">&#127908;</span> Escuchando&hellip;';
+                rec.onresult = (e) => {
+                    const texto = e.results[0][0].transcript;
+                    document.getElementById('input').value = texto;
+                    buscarTexto(texto);
+                };
+                rec.onerror = () => {
+                    micBtn.classList.remove('listening');
+                    micBtn.innerHTML = '<span class="ic">&#127908;</span> Buscar hablando';
+                };
+                rec.onend = () => {
+                    micBtn.classList.remove('listening');
+                    micBtn.innerHTML = '<span class="ic">&#127908;</span> Buscar hablando';
+                };
+                rec.start();
+            };
+        })();
+
+        // ---------- Buscar con foto (solo funciona dentro de la vista previa de Claude) ----------
+        (async function initFoto() {
+            if (!window.claude || !window.claude.use) return;
+            let sample;
+            try { sample = await window.claude.use('sample'); } catch (e) { return; }
+            if (!sample) return;
+            let limits;
+            try { limits = await sample.limits(); } catch (e) { return; }
+            if (!limits.images) return;
+
+            const camBtn = document.getElementById('camBtn');
+            const camInput = document.getElementById('camInput');
+            camBtn.hidden = false;
+            camInput.accept = limits.images.mediaTypes.join(',');
+
+            camInput.onchange = async () => {
+                const file = camInput.files[0];
+                if (!file) return;
+                camBtn.disabled = true;
+                camBtn.innerHTML = '<span class="ic">&#128248;</span> Viendo la foto&hellip;';
+                try {
+                    const { text } = await sample(
+                        'Esta foto muestra un producto o ingrediente de cocina que alguien quiere encontrar en el supermercado. ' +
+                        'Responde SOLO con el nombre del producto en español, en una o dos palabras, sin explicación ni puntuación. ' +
+                        'Ejemplos de respuesta correcta: cebolla / crema / chile jalapeño / tortillas de maíz.',
+                        { images: file, modelTier: 'quick', cache: false }
+                    );
+                    const nombre = text.trim().replace(/^["'.]+|["'.]+$/g, '');
+                    document.getElementById('input').value = nombre;
+                    buscarTexto(nombre, nombre, true);
+                } catch (e) {
+                    const mensajes = {
+                        not_granted: 'Necesita permitir esta función la primera vez que la use.',
+                        image_rejected: 'No pude leer esa foto. Intente con otra.',
+                        rate_limited: 'Espere un momento e intente de nuevo.',
+                        images_unavailable: 'Buscar con foto no está disponible aquí ahora.'
+                    };
+                    const resultBox = document.getElementById('result');
+                    resultBox.classList.add('notfound');
+                    document.getElementById('seen').style.display = 'none';
+                    document.getElementById('zone').textContent = 'No pude ver la foto';
+                    document.getElementById('hint').innerHTML = mensajes[e.code] || 'Intente escribir el nombre, o buscar hablando.';
+                    document.getElementById('addBtn').disabled = true;
+                    resultBox.style.display = 'block';
+                } finally {
+                    camBtn.disabled = false;
+                    camBtn.innerHTML = '<span class="ic">&#128248;</span> Tomar foto';
+                    camInput.value = '';
+                }
+            };
+        })();
+
+        // ---------- Letra grande ----------
+        (function initLetraGrande() {
+            const grande = localStorage.getItem('cocina_letra_grande') === '1';
+            if (grande) {
+                document.body.classList.add('grande');
+                document.getElementById('textToggle').setAttribute('aria-pressed', 'true');
+            }
+        })();
+        function alternarLetraGrande() {
+            const activo = document.body.classList.toggle('grande');
+            document.getElementById('textToggle').setAttribute('aria-pressed', String(activo));
+            try { localStorage.setItem('cocina_letra_grande', activo ? '1' : '0'); } catch (e) {}
+        }
+
+        // ---------- Mi Lista ----------
+        let misCompras = [];
+        try { misCompras = JSON.parse(localStorage.getItem('cocina_mi_lista') || '[]'); } catch (e) { misCompras = []; }
+
+        function guardarLista() {
+            try { localStorage.setItem('cocina_mi_lista', JSON.stringify(misCompras)); } catch (e) {}
+        }
+
+        function renderLista() {
+            const cont = document.getElementById('miLista');
+            const vacia = document.getElementById('listaVacia');
+            const clearBtn = document.getElementById('listClear');
+            cont.innerHTML = '';
+            if (!misCompras.length) {
+                vacia.style.display = 'block';
+                clearBtn.hidden = true;
+                return;
+            }
+            vacia.style.display = 'none';
+            clearBtn.hidden = false;
+            misCompras.forEach(item => {
+                const row = document.createElement('div');
+                row.className = 'lista-item' + (item.done ? ' done' : '');
+                row.innerHTML =
+                    '<input type="checkbox" ' + (item.done ? 'checked' : '') + ' aria-label="Comprado">' +
+                    '<div class="txt">' + item.texto + (item.zona ? '<span class="zona">' + item.zona + '</span>' : '') + '</div>' +
+                    '<button class="quitar" aria-label="Quitar">&times;</button>';
+                row.querySelector('input').onchange = () => { item.done = !item.done; guardarLista(); renderLista(); };
+                row.querySelector('.quitar').onclick = () => {
+                    misCompras = misCompras.filter(i => i.id !== item.id);
+                    guardarLista(); renderLista();
+                };
+                cont.appendChild(row);
+            });
+        }
+
+        function agregarActualALista() {
+            if (!ultimoTermino) return;
+            const zoneEl = document.getElementById('zone');
+            const yaExiste = misCompras.some(i => norm(i.texto) === norm(ultimoTermino));
+            if (yaExiste) return;
+            misCompras.push({ id: Date.now() + '-' + Math.random().toString(36).slice(2), texto: ultimoTermino, zona: zoneEl.textContent, done: false });
+            guardarLista();
+            renderLista();
+            const addBtn = document.getElementById('addBtn');
+            addBtn.textContent = 'Agregada ✓';
+            addBtn.disabled = true;
+        }
+
+        function vaciarLista() {
+            misCompras = [];
+            guardarLista();
+            renderLista();
+        }
+
+        renderLista();
+    </script>
+</body>
+</html>
